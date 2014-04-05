@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset name="S3">
+		<field name="s3Key"
+			type="text"
+			label="API Key"
+			description="API Key" />
+		<field name="s3Secret"
+			type="text"
+			label="API Secret"
+			description="API Secret" />
+		<field name="s3Bucket"
+			type="text"
+			label="S3 bucket name"
+			description="S3 bucket name" />
+		<field name="s3Region"
+			type="text"
+			label="S3 region name"
+			description="S3 region name" />
+		<field name="s3EnableFileHash"
+			type="radio"
+			label="Enable file hash"
+			description="Enable file hash"
+			class="btn-group btn-group-yesno"
+			default="false">
+			<option value="true">Yes</option>
+			<option value="false">No</option>
+		</field>
+	</fieldset>
+</config>
