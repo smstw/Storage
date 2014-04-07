@@ -14,7 +14,7 @@ abstract class StorageFactory
 		switch ($type)
 		{
 			case 'S3':
-				require_once __DIR__ . '/../lib/aws-autoloader.php';
+				require_once __DIR__ . '/../../lib/aws-autoloader.php';
 
 				return new S3($config);
 		}
