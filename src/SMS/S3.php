@@ -78,6 +78,13 @@ class S3 implements StorageInterface
 			$remoteFilePath = $this->config['prefix'] . '/' . $dir . '/' .
 				sha1_file($localFilePath) . '.' . $ext;
 		}
+		else
+		{
+			$dir = dirname($remoteFilePath);
+
+			$remoteFilePath = $this->config['prefix'] . '/' . $dir . '/' .
+				basename($localFilePath);
+		}
 
 		$result = $this->client->putObject(array(
 			'ACL' => 'public-read',
