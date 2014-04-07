@@ -5,6 +5,8 @@ namespace Helper;
 // Load SMS namespace
 JLoader::registerNamespace('SMS', __DIR__ . '/../../../../src');
 
+use SMS\S3;
+
 /**
  * Class StorageHelper
  */
@@ -13,17 +15,22 @@ class StorageHelper
 	/**
 	 * Storage client.
 	 *
-	 * @var \SMS\StorageInterface
+	 * @var S3
 	 */
 	protected static $client;
 
 	/**
 	 * Get storage client
 	 *
-	 * @return  \SMS\StorageInterface
+	 * @return  S3
 	 */
 	public static function getStorageClient()
 	{
+		if (static::$client instanceof S3)
+		{
+			return static::$client;
+		}
+
 		$params = JComponentHelper::getParams('com_organization');
 
 		$config = array(
@@ -35,7 +42,9 @@ class StorageHelper
 			'prefix' => $params['s3RemoteFilePathPrefix'],
 		);
 
-		static::$client = new \SMS\S3($config);
+		static::$client = new S3($config);
+
+		return static::$client;
 	}
 
 	/**
@@ -48,7 +57,7 @@ class StorageHelper
 	 */
 	public static function put($localFilePath, $storageFilePath)
 	{
-		return static::$client->put($localFilePath, $storageFilePath);
+		return static::getStorageClient()->put($localFilePath, $storageFilePath);
 	}
 
 	/**
@@ -60,6 +69,6 @@ class StorageHelper
 	 */
 	public function delete($storageFilePath)
 	{
-		return static::$client->delete($storageFilePath);
+		return static::getStorageClient()->delete($storageFilePath);
 	}
 }
