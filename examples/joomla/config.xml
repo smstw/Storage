@@ -17,6 +17,10 @@
 			type="text"
 			label="S3 region name"
 			description="S3 region name" />
+		<field name="s3RemoteFilePathPrefix"
+			type="text"
+			label="Remote file prefix"
+			description="Remote file prefix" />
 		<field name="s3EnableFileHash"
 			type="radio"
 			label="Enable file hash"

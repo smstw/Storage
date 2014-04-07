@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+// Load SMS namespace
+JLoader::registerNamespace('SMS', __DIR__ . '/../../../../src');
+
 /**
  * Class StorageHelper
  */
@@ -10,14 +13,14 @@ class StorageHelper
 	/**
 	 * Storage client.
 	 *
-	 * @var \StorageInterface
+	 * @var \SMS\StorageInterface
 	 */
 	protected static $client;
 
 	/**
 	 * Get storage client
 	 *
-	 * @return  \StorageInterface
+	 * @return  \SMS\StorageInterface
 	 */
 	public static function getStorageClient()
 	{
@@ -29,9 +32,10 @@ class StorageHelper
 			'bucket' => $params['s3Bucket'],
 			'region' => $params['s3Region'],
 			'hash'   => $params['s3EnableFileHash'],
+			'prefix' => $params['s3RemoteFilePathPrefix'],
 		);
 
-		static::$client = new \S3($config);
+		static::$client = new \SMS\S3($config);
 	}
 
 	/**
