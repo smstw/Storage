@@ -4,9 +4,20 @@
 
 ```php
 <?php
+/**
+ * In file test.php
+ */
 
-require_once __DIR__ .'/src/StorageFactory.php';
+require_once __DIR__ . '/lib/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
+// Register Autoloader
+$classLoader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+$classLoader->registerNamespaces(array(
+	'SMS'      => __DIR__ . '/src',
+));
+$classLoader->register();
+
+// Setup configuration
 $config = array(
 	'key'    => 'API Key',
 	'secret' => 'API Secret',
@@ -17,7 +28,7 @@ $config = array(
 
 $client = StorageFactory::factory('S3', $config);
 
-$res = $client->put('/path/to/srouce_file.jpg', '/path/to/remote/directory');
+$res = $client->put('/path/to/source_file.jpg', '/path/to/remote/directory');
 
 var_dump($res);
 ```
