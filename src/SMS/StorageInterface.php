@@ -1,5 +1,10 @@
 <?php
 
+namespace SMS;
+
+/**
+ * Interface StorageInterface
+ */
 interface StorageInterface
 {
 	/**

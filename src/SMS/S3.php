@@ -1,7 +1,12 @@
 <?php
 
+namespace SMS;
+
 use Aws\S3\S3Client;
 
+/**
+ * Class S3
+ */
 class S3 implements StorageInterface
 {
 	/**
@@ -28,6 +33,7 @@ class S3 implements StorageInterface
 	 *                          - region: S3 bucket region
 	 *                          - hash: (optional) True to enable filename hash, false to disable.
 	 *                          		Default is false
+	 *                          - prefix: remote storage
 	 *
 	 * @throws  Exception
 	 */
@@ -50,7 +56,16 @@ class S3 implements StorageInterface
 	 * @param   string  $localFilePath   Local file path
 	 * @param   string  $remoteFilePath  S3 file path
 	 *
-	 * @return  \Guzzle\Service\Resource\Model
+	 * @return  array
+	 *          - ETag: Entity tag for the uploaded object.
+	 *          - Expiration: If the object expiration is configured, this will contain the expiration date (expiry-date)
+	 *            and rule ID (rule-id). The value of rule-id is URL encoded.
+	 *          - ServerSideEncryption: The Server-side encryption algorithm used when storing this object in S3.
+	 *          - VersionId: Version of the object.
+	 *          - RequestId: Request ID of the operation
+	 *          - ObjectURL: URL of the uploaded object
+	 *
+	 * @see http://docs.aws.amazon.com/aws-sdk-php/latest/class-Aws.S3.S3Client.html#_putObject
 	 */
 	public function put($localFilePath, $remoteFilePath)
 	{
@@ -60,7 +75,8 @@ class S3 implements StorageInterface
 			$dir = dirname($remoteFilePath);
 			$ext = pathinfo($localFilePath, PATHINFO_EXTENSION);
 
-			$remoteFilePath = $dir . '/' . sha1_file($localFilePath) . '.' . $ext;
+			$remoteFilePath = $this->config['prefix'] . '/' . $dir . '/' .
+				sha1_file($localFilePath) . '.' . $ext;
 		}
 
 		$result = $this->client->putObject(array(
@@ -76,7 +92,7 @@ class S3 implements StorageInterface
 			'Key'    => $remoteFilePath,
 		));
 
-		return $result;
+		return $result->getAll();
 	}
 
 	/**
@@ -127,6 +143,9 @@ class S3 implements StorageInterface
 		}
 
 		$config['hash'] = empty($config['hash']) ? false : (bool) $config['hash'];
+		$config['prefix'] = empty($config['prefix']) ? false : (bool) $config['prefix'];
+
+		$config['prefix'] = trim($config['prefix'], ' /');
 
 		$this->config = $config;
 	}
